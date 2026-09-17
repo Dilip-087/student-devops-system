@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Dilip-087/student-devops-system.git'
+            }
+        }
+        stage('Generate Report') {
+            steps {
+                bat 'python app.py'
+            }
+        }
+        stage('Archive Artifact') {
+            steps {
+                archiveArtifacts artifacts: 'student_report.txt', fingerprint: true
+            }
+        }
+    }
+}
