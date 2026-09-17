@@ -1,24 +1,30 @@
 pipeline {
     agent any
-    environment {
-        SYS_NAME = 'StudentPerformancePortal'
-        SYS_VERSION = 'v2.4.0'
-    }
     stages {
         stage('Checkout Source') {
             steps {
-                git branch: 'main', url: 'https://github.com/Dilip-087/student-devops-system.git'
+                git branch: 'main', url: 'https://github.com/Dilip-087/student-devops-system'
             }
         }
-        stage('Show Configuration Info') {
-            steps {
-                echo "Spinning up environment for ${env.SYS_NAME}"
-                echo "Current Build Target Version: ${env.SYS_VERSION}"
+        stage('Parallel Portal Verifications') {
+            parallel {
+                stage('Frontend Validation') {
+                    steps {
+                        echo 'Starting frontend interface validation checks...'
+                        bat 'python frontend_check.py'
+                    }
+                }
+                stage('Backend Validation') {
+                    steps {
+                        echo 'Starting backend server framework validation checks...'
+                        bat 'python backend_check.py'
+                    }
+                }
             }
         }
-        stage('Simulate Build Verification') {
+        stage('Deployment Summary') {
             steps {
-                echo "Success: ${env.SYS_NAME} (${env.SYS_VERSION}) compiled without errors."
+                echo 'Pipeline Success: Concurrency targets achieved. All modules are production ready.'
             }
         }
     }
