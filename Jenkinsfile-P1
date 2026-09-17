@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Select target deployment environment')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Dilip-087/student-devops-system.git'
+            }
+        }
+        stage('Show Selected Parameter') {
+            steps {
+                echo "Target System Environment Selected: ${params.ENVIRONMENT}"
+            }
+        }
+        stage('Simulate Deploy') {
+            steps {
+                echo "Deploying Student System application directly to the ${params.ENVIRONMENT} server..."
+            }
+        }
+    }
+}
